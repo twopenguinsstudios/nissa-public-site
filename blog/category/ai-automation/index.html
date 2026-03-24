@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI &amp; Automation — Nissa Blog</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body { background: #f9f9fb; color: #1a1c1d; font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; }
+
+        .btn-primary {
+            background: linear-gradient(45deg, #6e00c1, #8a2be2); color: white; border-radius: 6px; padding: 13px 28px;
+            font-family: 'Inter', sans-serif; font-weight: 600; font-size: 15px; letter-spacing: -0.01em;
+            transition: transform 0.25s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.25s ease;
+            display: inline-flex; align-items: center; gap: 8px; cursor: pointer; border: none; text-decoration: none;
+        }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 28px rgba(110,0,193,0.32); }
+
+        .logo-mark {
+            font-family: 'Manrope', sans-serif; font-weight: 800; font-size: 1.375rem; letter-spacing: -0.05em;
+            background: linear-gradient(45deg, #6e00c1, #8a2be2); -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent; background-clip: text; text-decoration: none;
+        }
+        .display { font-family: 'Manrope', sans-serif; font-weight: 800; letter-spacing: -0.035em; line-height: 1.04; }
+        .headline { font-family: 'Manrope', sans-serif; font-weight: 700; letter-spacing: -0.025em; line-height: 1.15; }
+        .label { font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; font-weight: 600; }
+
+        .nav-wrap {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+            background: rgba(249,249,251,0.92); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid rgba(207,194,215,0.15); transition: border-color 0.2s ease;
+        }
+        .nav-link { font-size: 14px; font-weight: 500; color: #1a1c1d; text-decoration: none; opacity: 0.6; transition: opacity 0.15s ease; }
+        .nav-link:hover { opacity: 1; }
+
+        .post-card {
+            background: #fff; border-radius: 16px;
+            box-shadow: 0 12px 28px rgba(110,0,193,0.06), 0 2px 6px rgba(110,0,193,0.03);
+            overflow: hidden; display: flex; flex-direction: column; text-decoration: none; color: inherit;
+            transition: transform 0.25s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.25s ease;
+        }
+        .post-card:hover { transform: translateY(-3px); box-shadow: 0 24px 48px rgba(110,0,193,0.1); }
+        .post-card:hover .read-link { color: #6e00c1; }
+        .post-card-img { height: 180px; position: relative; overflow: hidden; display: flex; align-items: flex-end; padding: 1.25rem; }
+        .post-card-body { padding: 1.5rem; flex: 1; display: flex; flex-direction: column; }
+
+        .chip-ai-cat { background: rgba(26,28,29,0.06); color: rgba(26,28,29,0.62); border-radius: 20px; padding: 3px 10px; font-size: 10.5px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; display: inline-block; }
+        .cat-pill { font-size: 13.5px; font-weight: 500; padding: 7px 16px; border-radius: 20px; text-decoration: none; transition: background 0.15s ease, color 0.15s ease; color: rgba(26,28,29,0.55); }
+        .cat-pill:hover { background: #e2e2e4; color: #1a1c1d; }
+        .cat-pill.active { background: #1a1c1d; color: #fff; }
+        .read-link { font-size: 13px; font-weight: 600; color: rgba(110,0,193,0.7); text-decoration: none; display: inline-flex; align-items: center; gap: 4px; transition: color 0.15s ease; }
+
+        .cta-bg {
+            background: linear-gradient(145deg, #6e00c1 0%, #7d11d4 40%, #8a2be2 70%, #93075d 100%);
+            position: relative; overflow: hidden;
+        }
+        .cta-bg::before { content: ''; position: absolute; top: -40%; left: -15%; width: 55%; height: 200%; background: radial-gradient(ellipse, rgba(255,255,255,0.07) 0%, transparent 65%); pointer-events: none; }
+
+        .fade-up { opacity: 0; transform: translateY(20px); transition: opacity 0.55s ease, transform 0.55s cubic-bezier(0.16,1,0.3,1); }
+        .fade-up.visible { opacity: 1; transform: translateY(0); }
+
+        ::-webkit-scrollbar { width: 5px; } ::-webkit-scrollbar-track { background: #f3f3f5; } ::-webkit-scrollbar-thumb { background: #cfc2d7; border-radius: 3px; }
+
+        @media (max-width: 900px) {
+            .post-grid { grid-template-columns: 1fr 1fr !important; }
+            .nav-links { display: none !important; }
+            .footer-grid { grid-template-columns: 1fr 1fr !important; }
+        }
+        @media (max-width: 600px) { .post-grid { grid-template-columns: 1fr !important; } }
+    </style>
+</head>
+<body>
+
+<!-- ══ NAV ══ -->
+<header class="nav-wrap" id="nav">
+    <nav style="max-width:1200px;margin:0 auto;padding:0 2rem;height:64px;display:flex;align-items:center;justify-content:space-between;">
+        <a href="../../../" class="logo-mark">nissa</a>
+        <div class="nav-links" style="display:flex;align-items:center;gap:2rem;">
+            <a href="../../../#how-it-works" class="nav-link">How it works</a>
+            <a href="../../../#capabilities" class="nav-link">Features</a>
+            <a href="../../../#pricing" class="nav-link">Pricing</a>
+            <a href="../../" class="nav-link">Blog</a>
+        </div>
+        <a href="../../../#demo" class="btn-primary" style="font-size:14px;padding:9px 20px;">
+            Book a demo
+            <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M1 6.5h11M7 1.5l5 5-5 5" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+    </nav>
+</header>
+
+
+<!-- ══ CATEGORY HERO ══ -->
+<section style="padding-top:96px;background:#f9f9fb;">
+    <div style="max-width:1200px;margin:0 auto;padding:3.5rem 2rem 2.5rem;">
+        <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:2rem;">
+            <a href="../../" style="font-size:13px;color:rgba(26,28,29,0.42);text-decoration:none;" onmouseover="this.style.color='rgba(26,28,29,0.65)'" onmouseout="this.style.color='rgba(26,28,29,0.42)'">Blog</a>
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M4 2l4 4-4 4" stroke="rgba(26,28,29,0.3)" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span style="font-size:13px;color:#1a1c1d;font-weight:500;">AI &amp; Automation</span>
+        </div>
+
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:2rem;flex-wrap:wrap;">
+            <div>
+                <div style="display:inline-flex;align-items:center;gap:0.625rem;background:rgba(26,28,29,0.06);border-radius:12px;padding:0.625rem 1rem;margin-bottom:1.25rem;">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(26,28,29,0.55)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+                    <span class="label" style="color:rgba(26,28,29,0.55);">AI &amp; Automation</span>
+                </div>
+                <h1 class="display fade-up" style="font-size:clamp(2rem,4vw,3rem);margin-bottom:0.875rem;">AI &amp; Automation</h1>
+                <p style="font-size:1.0625rem;line-height:1.7;color:rgba(26,28,29,0.55);max-width:480px;">
+                    How AI reads contracts, what extraction accuracy means in practice, and how automation changes contract management for mid-market teams.
+                </p>
+            </div>
+            <div style="background:#fff;border-radius:16px;padding:1.25rem 1.75rem;box-shadow:0 8px 24px rgba(110,0,193,0.06);text-align:center;flex-shrink:0;">
+                <div style="font-family:'Manrope',sans-serif;font-weight:800;font-size:2rem;letter-spacing:-0.04em;color:#1a1c1d;line-height:1;margin-bottom:0.25rem;">1</div>
+                <div style="font-size:12px;color:rgba(26,28,29,0.45);">article</div>
+            </div>
+        </div>
+
+        <div style="display:flex;align-items:center;gap:0.5rem;flex-wrap:wrap;margin-top:2rem;">
+            <a href="../../" class="cat-pill">All posts</a>
+            <a href="../procurement/" class="cat-pill">Procurement</a>
+            <a href="../contract-intelligence/" class="cat-pill">Contract Intelligence</a>
+            <a href="index.html" class="cat-pill active">AI &amp; Automation</a>
+        </div>
+    </div>
+</section>
+
+
+<!-- ══ POST GRID ══ -->
+<section style="padding:2.5rem 2rem 5rem;max-width:1200px;margin:0 auto;">
+    <div class="post-grid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;">
+
+        <a href="../../posts/how-ai-reads-contracts/" class="post-card fade-up">
+            <div class="post-card-img" style="background:linear-gradient(135deg,#1a1c1d 0%,#2e1a40 50%,#6e00c1 100%);">
+                <div style="position:absolute;inset:0;background:radial-gradient(ellipse at 50% 20%,rgba(110,0,193,0.3) 0%,transparent 65%);"></div>
+                <div style="background:rgba(255,255,255,0.1);backdrop-filter:blur(8px);border-radius:10px;padding:0.625rem 0.875rem;display:flex;align-items:center;gap:0.5rem;position:relative;z-index:1;">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.9)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+                    <span style="font-size:12px;font-weight:700;color:rgba(255,255,255,0.85);">AI extraction accuracy: 94%</span>
+                </div>
+            </div>
+            <div class="post-card-body">
+                <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:0.875rem;">
+                    <span class="chip-ai-cat">AI &amp; Automation</span>
+                    <span style="font-size:11.5px;color:rgba(26,28,29,0.38);">5 min</span>
+                </div>
+                <h3 class="headline" style="font-size:1.125rem;margin-bottom:0.625rem;color:#1a1c1d;line-height:1.3;">How AI actually reads a contract (and why it matters)</h3>
+                <p style="font-size:0.875rem;line-height:1.65;color:rgba(26,28,29,0.56);flex:1;margin-bottom:1.25rem;">AI doesn't read contracts the way a lawyer does. For procurement teams, that difference turns out to be a feature — not a bug.</p>
+                <div style="display:flex;align-items:center;justify-content:space-between;padding-top:1rem;border-top:1px solid rgba(207,194,215,0.18);">
+                    <span style="font-size:12px;color:rgba(26,28,29,0.38);">Pat Doyle · Feb 18, 2026</span>
+                    <span class="read-link">Read <svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M1 6h10M6.5 1.5l4.5 4.5-4.5 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                </div>
+            </div>
+        </a>
+
+    </div>
+</section>
+
+
+<!-- ══ CTA STRIP ══ -->
+<section class="cta-bg" style="padding:5rem 2rem;">
+    <div style="max-width:680px;margin:0 auto;text-align:center;position:relative;z-index:1;">
+        <h2 class="headline" style="font-size:2.25rem;color:white;margin-bottom:1rem;">See Nissa on your own contracts.</h2>
+        <p style="font-size:1rem;line-height:1.7;color:rgba(255,255,255,0.6);margin-bottom:2rem;">Forward a contract. Get pricing benchmarks, renewal alerts, and risk flags in 60 seconds.</p>
+        <a href="../../../#demo" style="background:white;color:#6e00c1;border-radius:6px;padding:14px 32px;font-family:'Inter',sans-serif;font-weight:700;font-size:15px;text-decoration:none;display:inline-flex;align-items:center;gap:8px;">Book a demo →</a>
+    </div>
+</section>
+
+
+<!-- ══ FOOTER ══ -->
+<footer style="background:#1a1c1d;padding:4rem 2rem 2.5rem;">
+    <div style="max-width:1200px;margin:0 auto;">
+        <div class="footer-grid" style="display:grid;grid-template-columns:2.25fr 1fr 1fr 1fr;gap:4rem;margin-bottom:3rem;">
+            <div>
+                <div style="font-family:'Manrope',sans-serif;font-weight:800;font-size:1.375rem;letter-spacing:-0.05em;color:white;margin-bottom:1.125rem;">nissa</div>
+                <p style="font-size:0.875rem;line-height:1.72;color:rgba(255,255,255,0.35);max-width:255px;margin:0 0 1rem;">Most CLMs store contracts. Nissa runs them.</p>
+                <a href="mailto:hello@nissa.ai" style="font-size:13.5px;color:#8a2be2;text-decoration:none;font-weight:500;">hello@nissa.ai</a>
+            </div>
+            <div>
+                <div class="label" style="color:rgba(255,255,255,0.25);display:block;margin-bottom:1.25rem;">Product</div>
+                <div style="display:flex;flex-direction:column;gap:0.75rem;">
+                    <a href="../../../#how-it-works" style="font-size:14px;color:rgba(255,255,255,0.48);text-decoration:none;" onmouseover="this.style.color='rgba(255,255,255,0.82)'" onmouseout="this.style.color='rgba(255,255,255,0.48)'">How it works</a>
+                    <a href="../../../#pricing" style="font-size:14px;color:rgba(255,255,255,0.48);text-decoration:none;" onmouseover="this.style.color='rgba(255,255,255,0.82)'" onmouseout="this.style.color='rgba(255,255,255,0.48)'">Pricing</a>
+                </div>
+            </div>
+            <div>
+                <div class="label" style="color:rgba(255,255,255,0.25);display:block;margin-bottom:1.25rem;">Company</div>
+                <div style="display:flex;flex-direction:column;gap:0.75rem;">
+                    <a href="../../" style="font-size:14px;color:rgba(255,255,255,0.82);text-decoration:none;">Blog</a>
+                    <a href="mailto:hello@nissa.ai" style="font-size:14px;color:rgba(255,255,255,0.48);text-decoration:none;" onmouseover="this.style.color='rgba(255,255,255,0.82)'" onmouseout="this.style.color='rgba(255,255,255,0.48)'">Contact</a>
+                </div>
+            </div>
+            <div>
+                <div class="label" style="color:rgba(255,255,255,0.25);display:block;margin-bottom:1.25rem;">Legal</div>
+                <div style="display:flex;flex-direction:column;gap:0.75rem;">
+                    <a href="#" style="font-size:14px;color:rgba(255,255,255,0.48);text-decoration:none;" onmouseover="this.style.color='rgba(255,255,255,0.82)'" onmouseout="this.style.color='rgba(255,255,255,0.48)'">Privacy</a>
+                    <a href="#" style="font-size:14px;color:rgba(255,255,255,0.48);text-decoration:none;" onmouseover="this.style.color='rgba(255,255,255,0.82)'" onmouseout="this.style.color='rgba(255,255,255,0.48)'">Terms</a>
+                </div>
+            </div>
+        </div>
+        <div style="border-top:1px solid rgba(255,255,255,0.07);padding-top:2rem;">
+            <div style="font-size:13px;color:rgba(255,255,255,0.2);">© 2026 Nissa Technologies, Inc.</div>
+        </div>
+    </div>
+</footer>
+
+<script>
+    const obs = new IntersectionObserver(e => e.forEach(x => { if (x.isIntersecting) x.target.classList.add('visible'); }), { threshold: 0.08 });
+    document.querySelectorAll('.fade-up').forEach(el => obs.observe(el));
+    const nav = document.getElementById('nav');
+    window.addEventListener('scroll', () => {
+        nav.style.borderBottomColor = window.scrollY > 10 ? 'rgba(207,194,215,0.28)' : 'rgba(207,194,215,0.15)';
+    }, { passive: true });
+</script>
+</body>
+</html>

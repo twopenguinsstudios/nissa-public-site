@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Hidden Cost of Missed Auto-Renewals — Nissa Blog</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body { background: #f9f9fb; color: #1a1c1d; font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; }
+
+        .btn-primary {
+            background: linear-gradient(45deg, #6e00c1, #8a2be2); color: white; border-radius: 6px; padding: 13px 28px;
+            font-family: 'Inter', sans-serif; font-weight: 600; font-size: 15px; letter-spacing: -0.01em;
+            transition: transform 0.25s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.25s ease;
+            display: inline-flex; align-items: center; gap: 8px; cursor: pointer; border: none; text-decoration: none;
+        }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 28px rgba(110,0,193,0.32); }
+
+        .logo-mark {
+            font-family: 'Manrope', sans-serif; font-weight: 800; font-size: 1.375rem; letter-spacing: -0.05em;
+            background: linear-gradient(45deg, #6e00c1, #8a2be2); -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent; background-clip: text; text-decoration: none;
+        }
+        .headline { font-family: 'Manrope', sans-serif; font-weight: 700; letter-spacing: -0.025em; line-height: 1.15; }
+        .label { font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; font-weight: 600; }
+
+        .nav-wrap {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+            background: rgba(249,249,251,0.92); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid rgba(207,194,215,0.15); transition: border-color 0.2s ease;
+        }
+        .nav-link { font-size: 14px; font-weight: 500; color: #1a1c1d; text-decoration: none; opacity: 0.6; transition: opacity 0.15s ease; }
+        .nav-link:hover { opacity: 1; }
+
+        /* ── Prose ── */
+        .prose { max-width: 680px; margin: 0 auto; }
+        .prose h2 { font-family: 'Manrope', sans-serif; font-weight: 700; font-size: 1.5rem; letter-spacing: -0.02em; line-height: 1.25; color: #1a1c1d; margin: 2.5rem 0 0.875rem; }
+        .prose h3 { font-family: 'Manrope', sans-serif; font-weight: 600; font-size: 1.125rem; letter-spacing: -0.015em; color: #1a1c1d; margin: 2rem 0 0.625rem; }
+        .prose p { font-size: 1.0625rem; line-height: 1.8; color: rgba(26,28,29,0.76); margin: 0 0 1.25rem; }
+        .prose ul { margin: 0.5rem 0 1.25rem 1.25rem; }
+        .prose li { font-size: 1.0625rem; line-height: 1.75; color: rgba(26,28,29,0.76); margin-bottom: 0.5rem; }
+        .prose strong { color: #1a1c1d; font-weight: 600; }
+        .prose a { color: #6e00c1; text-decoration: none; border-bottom: 1px solid rgba(110,0,193,0.25); transition: border-color 0.15s ease; }
+        .prose a:hover { border-color: #6e00c1; }
+
+        .pull-quote {
+            border-left: 4px solid #93075d; padding: 1.25rem 1.5rem; background: rgba(147,7,93,0.04);
+            border-radius: 0 10px 10px 0; margin: 2rem 0;
+        }
+        .pull-quote p { font-family: 'Manrope', sans-serif; font-weight: 600; font-size: 1.0625rem; line-height: 1.55; color: #1a1c1d; margin: 0; letter-spacing: -0.01em; }
+
+        .callout {
+            background: rgba(110,0,193,0.05); border-radius: 12px; padding: 1.25rem 1.5rem; margin: 2rem 0;
+        }
+        .callout-title { font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; font-weight: 700; color: #6e00c1; margin-bottom: 0.5rem; }
+        .callout p { font-size: 0.9375rem; line-height: 1.65; color: rgba(26,28,29,0.7); margin: 0; }
+
+        .stat-row { display: grid; grid-template-columns: repeat(3,1fr); gap: 1rem; margin: 2rem 0; }
+        .stat-box { background: #fff; border-radius: 12px; padding: 1.25rem; box-shadow: 0 8px 20px rgba(110,0,193,0.05); text-align: center; }
+        .stat-num { font-family: 'Manrope', sans-serif; font-weight: 800; font-size: 1.75rem; letter-spacing: -0.04em; color: #6e00c1; line-height: 1; margin-bottom: 0.375rem; }
+        .stat-label { font-size: 12px; color: rgba(26,28,29,0.5); line-height: 1.4; }
+
+        .chip-procurement { background: rgba(110,0,193,0.08); color: #6e00c1; border-radius: 20px; padding: 3px 10px; font-size: 10.5px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; display: inline-block; }
+
+        .cta-bg {
+            background: linear-gradient(145deg, #6e00c1 0%, #7d11d4 40%, #8a2be2 70%, #93075d 100%);
+            position: relative; overflow: hidden; border-radius: 20px;
+        }
+        .cta-bg::before { content: ''; position: absolute; top: -40%; left: -15%; width: 55%; height: 200%; background: radial-gradient(ellipse, rgba(255,255,255,0.07) 0%, transparent 65%); pointer-events: none; }
+
+        .related-card {
+            background: #fff; border-radius: 14px; padding: 1.5rem;
+            box-shadow: 0 8px 20px rgba(110,0,193,0.05); text-decoration: none; color: inherit;
+            transition: transform 0.2s ease, box-shadow 0.2s ease; display: block;
+        }
+        .related-card:hover { transform: translateY(-2px); box-shadow: 0 16px 36px rgba(110,0,193,0.09); }
+
+        ::-webkit-scrollbar { width: 5px; } ::-webkit-scrollbar-track { background: #f3f3f5; } ::-webkit-scrollbar-thumb { background: #cfc2d7; border-radius: 3px; }
+
+        @media (max-width: 900px) {
+            .nav-links { display: none !important; }
+            .stat-row { grid-template-columns: 1fr 1fr !important; }
+            .related-grid { grid-template-columns: 1fr !important; }
+        }
+        @media (max-width: 600px) {
+            .stat-row { grid-template-columns: 1fr !important; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ══ NAV ══ -->
+<header class="nav-wrap" id="nav">
+    <nav style="max-width:1200px;margin:0 auto;padding:0 2rem;height:64px;display:flex;align-items:center;justify-content:space-between;">
+        <a href="../../../" class="logo-mark">nissa</a>
+        <div class="nav-links" style="display:flex;align-items:center;gap:2rem;">
+            <a href="../../../#how-it-works" class="nav-link">How it works</a>
+            <a href="../../../#capabilities" class="nav-link">Features</a>
+            <a href="../../../#pricing" class="nav-link">Pricing</a>
+            <a href="../../" class="nav-link">Blog</a>
+        </div>
+        <a href="../../../#demo" class="btn-primary" style="font-size:14px;padding:9px 20px;">
+            Book a demo
+            <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M1 6.5h11M7 1.5l5 5-5 5" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+    </nav>
+</header>
+
+
+<!-- ══ ARTICLE HEADER ══ -->
+<section style="padding-top:96px;background:#f9f9fb;">
+    <div style="max-width:800px;margin:0 auto;padding:3.5rem 2rem 0;">
+
+        <!-- Breadcrumb -->
+        <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:2rem;">
+            <a href="../../" style="font-size:13px;color:rgba(26,28,29,0.42);text-decoration:none;transition:color 0.15s ease;" onmouseover="this.style.color='#6e00c1'" onmouseout="this.style.color='rgba(26,28,29,0.42)'">Blog</a>
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M4 2l4 4-4 4" stroke="rgba(26,28,29,0.3)" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <a href="../../category/procurement/" style="font-size:13px;color:rgba(26,28,29,0.42);text-decoration:none;transition:color 0.15s ease;" onmouseover="this.style.color='#6e00c1'" onmouseout="this.style.color='rgba(26,28,29,0.42)'">Procurement</a>
+        </div>
+
+        <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:1.5rem;">
+            <span class="chip-procurement">Procurement</span>
+            <span style="font-size:13px;color:rgba(26,28,29,0.4);">5 min read</span>
+        </div>
+
+        <h1 class="headline" style="font-size:clamp(2rem,4vw,2.875rem);margin-bottom:1.25rem;color:#1a1c1d;">
+            The hidden cost of missed auto-renewals
+        </h1>
+
+        <p style="font-size:1.125rem;line-height:1.7;color:rgba(26,28,29,0.58);margin-bottom:2rem;max-width:600px;">
+            A $40K software contract auto-renewed. Nobody noticed for three months. This isn't unusual — it's the norm at most mid-market companies.
+        </p>
+
+        <div style="display:flex;align-items:center;gap:0.75rem;padding-bottom:2.5rem;border-bottom:1px solid rgba(207,194,215,0.2);">
+            <div style="width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,#6e00c1,#8a2be2);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                <span style="font-family:'Manrope',sans-serif;font-weight:800;font-size:14px;color:white;">P</span>
+            </div>
+            <div>
+                <div style="font-size:14px;font-weight:600;color:#1a1c1d;">Pat Doyle</div>
+                <div style="font-size:12.5px;color:rgba(26,28,29,0.42);">Founder, Nissa · March 12, 2026</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!-- ══ ARTICLE BODY ══ -->
+<article style="padding:3rem 2rem 5rem;">
+    <div class="prose">
+
+        <p>It starts with an email you almost delete. "Your subscription to [Software] has been automatically renewed for another year at $42,400." By the time someone flags it, the charge has already hit the card. The 60-day cancellation window closed six weeks ago.</p>
+
+        <p>At most mid-market companies, this happens multiple times per year. Not because anyone is incompetent. Because there is no system.</p>
+
+        <div class="stat-row">
+            <div class="stat-box">
+                <div class="stat-num">12–20</div>
+                <div class="stat-label">average annual auto-renewals at a 200-person company</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-num">$340K</div>
+                <div class="stat-label">estimated excess spend per year from unwanted renewals</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-num">60 days</div>
+                <div class="stat-label">typical cancellation notice window — the one most people miss</div>
+            </div>
+        </div>
+
+        <h2>The anatomy of a missed renewal</h2>
+
+        <p>Auto-renewal clauses are in almost every SaaS contract, almost every service agreement, and a surprising number of equipment leases and consulting retainers. They're not hidden — they're usually in a standard clause somewhere in the middle of the agreement that nobody reads a second time after signing.</p>
+
+        <p>The problem isn't the clause. The problem is the gap between when a contract is signed and when renewal action is required. That gap is usually 11–23 months, which is long enough for the person who signed the contract to have changed roles, left the company, or simply forgotten the terms.</p>
+
+        <div class="pull-quote">
+            <p>"The contract was signed by a VP who left eight months ago. The tool still works, so nobody questioned the charge. We got auto-renewed three years in a row before we noticed."</p>
+        </div>
+
+        <p>This is the pattern. The contract gets signed. It lives in someone's inbox or a shared drive folder nobody visits. The renewal window opens. Closes. The charge appears. Finance reconciles it, flags it as "existing vendor," and moves on.</p>
+
+        <h2>What it actually costs</h2>
+
+        <p>The direct cost — the unwanted renewal charge — is the obvious part. But the real cost has three layers:</p>
+
+        <ul>
+            <li><strong>The renewal itself.</strong> If you didn't want the software renewed, you're now on the hook for another year at last year's price (which may no longer reflect your actual usage or the current market rate).</li>
+            <li><strong>Lost renegotiation leverage.</strong> Vendors know you're in for another year. Your ability to negotiate pricing, add-ons, or terms drops to near zero for the next 12 months.</li>
+            <li><strong>The compounding effect.</strong> If this happens with 4–6 vendors per year, and each contract averages $30K–$80K, the annual drag becomes material fast. A $150M company that misses 5 renewals per year is likely overpaying $200K–$400K annually on contracts it either no longer uses or could renegotiate downward.</li>
+        </ul>
+
+        <div class="callout">
+            <div class="callout-title">The 11% figure</div>
+            <p>Research consistently shows mid-market companies lose approximately 11% of post-signature contract value to missed renewals, price creep, and untracked obligations. For a company with $2M in annual vendor spend, that's $220,000 per year in avoidable losses.</p>
+        </div>
+
+        <h2>Why spreadsheets don't fix this</h2>
+
+        <p>Most finance teams, when they realize they have a renewal problem, build a spreadsheet. A tab for every vendor. Columns for contract end date, auto-renewal date, notice deadline, owner.</p>
+
+        <p>This works for about three months. Then someone updates a contract and forgets to update the spreadsheet. The tab gets out of date. New contracts get added inconsistently. The person who maintains it leaves. You're back to where you started, except now you also have a spreadsheet that gives you false confidence.</p>
+
+        <p>The spreadsheet isn't the problem. The problem is that the data lives separately from where contracts actually live — in email inboxes, shared drives, DocuSign completed folders. Keeping the two in sync requires ongoing manual work that never stays done.</p>
+
+        <h2>What a systematic fix looks like</h2>
+
+        <p>The companies that solve this don't do it by building a better spreadsheet. They solve it by treating contract data like operational data — something that flows automatically into a system and generates alerts without manual intervention.</p>
+
+        <p>Practically, this means:</p>
+
+        <ul>
+            <li><strong>Every new contract gets processed immediately at signing</strong> — not filed away and manually entered into a tracker later.</li>
+            <li><strong>Renewal windows are calculated automatically</strong> from the contract's actual terms, not from someone's memory of the terms.</li>
+            <li><strong>Alerts fire 90, 60, and 30 days before the action date</strong> — to the right person, not just the general inbox.</li>
+            <li><strong>The system is frictionless enough that it actually gets used.</strong> If adoption requires training or a new workflow, it won't get adopted.</li>
+        </ul>
+
+        <div class="pull-quote">
+            <p>"The best renewal tracking systems are the ones you forget are running — because they just surface the right information at the right time without requiring anyone to do anything extra."</p>
+        </div>
+
+        <h2>The renewal you can't afford to miss</h2>
+
+        <p>There's usually one contract in every company's portfolio that's orders of magnitude more important than the others. A primary SaaS platform. A key vendor relationship. A lease or service agreement that would take months to replace.</p>
+
+        <p>Missing the notice window on that contract isn't just an expense. It's a negotiating disaster. You're locked in for another year while the vendor knows you can't walk away.</p>
+
+        <p>The system you build to catch the $8K tool renewals is the same system that protects the $200K platform renewal. That's where the real value of systematic renewal tracking lives — not in the small catches, but in the big ones you don't know you're going to need.</p>
+
+        <div class="callout">
+            <div class="callout-title">What Nissa does here</div>
+            <p>Forward a contract to Nissa. It extracts the auto-renewal clause, calculates the notice deadline, and adds it to your renewal calendar automatically. You get alerts 90, 60, and 30 days out — before the window closes. No spreadsheet. No manual tracking.</p>
+        </div>
+
+    </div>
+</article>
+
+
+<!-- ══ INLINE CTA ══ -->
+<section style="padding:0 2rem 5rem;">
+    <div style="max-width:680px;margin:0 auto;">
+        <div class="cta-bg" style="padding:3rem;text-align:center;">
+            <div style="position:relative;z-index:1;">
+                <div class="label" style="color:rgba(255,255,255,0.45);display:block;margin-bottom:0.875rem;">Never miss a renewal</div>
+                <h2 class="headline" style="font-size:1.75rem;color:white;margin-bottom:0.875rem;">Track every renewal window automatically.</h2>
+                <p style="font-size:0.9375rem;line-height:1.65;color:rgba(255,255,255,0.6);margin-bottom:1.75rem;">Forward a contract. Nissa extracts the terms and adds it to your renewal calendar in 60 seconds.</p>
+                <a href="../../../#demo" style="background:white;color:#6e00c1;border-radius:6px;padding:13px 28px;font-family:'Inter',sans-serif;font-weight:700;font-size:14px;text-decoration:none;display:inline-flex;align-items:center;gap:8px;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">Book a demo →</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!-- ══ RELATED POSTS ══ -->
+<section style="padding:0 2rem 5rem;max-width:800px;margin:0 auto;">
+    <div style="border-top:1px solid rgba(207,194,215,0.2);padding-top:3rem;">
+        <div class="label" style="color:rgba(26,28,29,0.35);margin-bottom:1.5rem;">More from the blog</div>
+        <div class="related-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+
+            <a href="../contract-benchmarking-without-a-procurement-team/" class="related-card">
+                <span style="background:rgba(110,0,193,0.08);color:#6e00c1;border-radius:20px;padding:2px 8px;font-size:10px;font-weight:700;letter-spacing:0.04em;text-transform:uppercase;display:inline-block;margin-bottom:0.75rem;">Procurement</span>
+                <div class="headline" style="font-size:1rem;margin-bottom:0.5rem;color:#1a1c1d;line-height:1.35;">How to benchmark vendor pricing without a procurement team</div>
+                <div style="font-size:12px;color:rgba(26,28,29,0.4);">Feb 26, 2026 · 4 min</div>
+            </a>
+
+            <a href="../why-clm-adoption-fails/" class="related-card">
+                <span style="background:#ffd8e6;color:#93075d;border-radius:20px;padding:2px 8px;font-size:10px;font-weight:700;letter-spacing:0.04em;text-transform:uppercase;display:inline-block;margin-bottom:0.75rem;">Contract Intelligence</span>
+                <div class="headline" style="font-size:1rem;margin-bottom:0.5rem;color:#1a1c1d;line-height:1.35;">Why 70% of CLM implementations fail</div>
+                <div style="font-size:12px;color:rgba(26,28,29,0.4);">Mar 5, 2026 · 6 min</div>
+            </a>
+
+        </div>
+    </div>
+</section>
+
+
+<!-- ══ FOOTER ══ -->
+<footer style="background:#1a1c1d;padding:4rem 2rem 2.5rem;">
+    <div style="max-width:1200px;margin:0 auto;">
+        <div style="display:grid;grid-template-columns:2.25fr 1fr 1fr 1fr;gap:4rem;margin-bottom:3rem;">
+            <div>
+                <div style="font-family:'Manrope',sans-serif;font-weight:800;font-size:1.375rem;letter-spacing:-0.05em;color:white;margin-bottom:1.125rem;">nissa</div>
+                <p style="font-size:0.875rem;line-height:1.72;color:rgba(255,255,255,0.35);max-width:255px;margin:0 0 1rem;">Most CLMs store contracts. Nissa runs them.</p>
+                <a href="mailto:hello@nissa.ai" style="font-size:13.5px;color:#8a2be2;text-decoration:none;font-weight:500;">hello@nissa.ai</a>
+            </div>
+            <div>
+                <div class="label" style="color:rgba(255,255,255,0.25);display:block;margin-bottom:1.25rem;">Product</div>
+                <div style="display:flex;flex-direction:column;gap:0.75rem;">
+                    <a href="../../../#how-it-works" style="font-size:14px;color:rgba(255,255,255,0.48);text-decoration:none;" onmouseover="this.style.color='rgba(255,255,255,0.82)'" onmouseout="this.style.color='rgba(255,255,255,0.48)'">How it works</a>
+                    <a href="../../../#pricing" style="font-size:14px;color:rgba(255,255,255,0.48);text-decoration:none;" onmouseover="this.style.color='rgba(255,255,255,0.82)'" onmouseout="this.style.color='rgba(255,255,255,0.48)'">Pricing</a>
+                </div>
+            </div>
+            <div>
+                <div class="label" style="color:rgba(255,255,255,0.25);display:block;margin-bottom:1.25rem;">Company</div>
+                <div style="display:flex;flex-direction:column;gap:0.75rem;">
+                    <a href="../../" style="font-size:14px;color:rgba(255,255,255,0.82);text-decoration:none;">Blog</a>
+                    <a href="mailto:hello@nissa.ai" style="font-size:14px;color:rgba(255,255,255,0.48);text-decoration:none;" onmouseover="this.style.color='rgba(255,255,255,0.82)'" onmouseout="this.style.color='rgba(255,255,255,0.48)'">Contact</a>
+                </div>
+            </div>
+            <div>
+                <div class="label" style="color:rgba(255,255,255,0.25);display:block;margin-bottom:1.25rem;">Legal</div>
+                <div style="display:flex;flex-direction:column;gap:0.75rem;">
+                    <a href="#" style="font-size:14px;color:rgba(255,255,255,0.48);text-decoration:none;" onmouseover="this.style.color='rgba(255,255,255,0.82)'" onmouseout="this.style.color='rgba(255,255,255,0.48)'">Privacy</a>
+                    <a href="#" style="font-size:14px;color:rgba(255,255,255,0.48);text-decoration:none;" onmouseover="this.style.color='rgba(255,255,255,0.82)'" onmouseout="this.style.color='rgba(255,255,255,0.48)'">Terms</a>
+                </div>
+            </div>
+        </div>
+        <div style="border-top:1px solid rgba(255,255,255,0.07);padding-top:2rem;">
+            <div style="font-size:13px;color:rgba(255,255,255,0.2);">© 2026 Nissa Technologies, Inc.</div>
+        </div>
+    </div>
+</footer>
+
+<script>
+    const nav = document.getElementById('nav');
+    window.addEventListener('scroll', () => {
+        nav.style.borderBottomColor = window.scrollY > 10 ? 'rgba(207,194,215,0.28)' : 'rgba(207,194,215,0.15)';
+    }, { passive: true });
+</script>
+</body>
+</html>

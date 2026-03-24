@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How AI Actually Reads a Contract — Nissa Blog</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body { background: #f9f9fb; color: #1a1c1d; font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; }
+
+        .btn-primary {
+            background: linear-gradient(45deg, #6e00c1, #8a2be2); color: white; border-radius: 6px; padding: 13px 28px;
+            font-family: 'Inter', sans-serif; font-weight: 600; font-size: 15px; letter-spacing: -0.01em;
+            transition: transform 0.25s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.25s ease;
+            display: inline-flex; align-items: center; gap: 8px; cursor: pointer; border: none; text-decoration: none;
+        }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 28px rgba(110,0,193,0.32); }
+
+        .logo-mark {
+            font-family: 'Manrope', sans-serif; font-weight: 800; font-size: 1.375rem; letter-spacing: -0.05em;
+            background: linear-gradient(45deg, #6e00c1, #8a2be2); -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent; background-clip: text; text-decoration: none;
+        }
+        .headline { font-family: 'Manrope', sans-serif; font-weight: 700; letter-spacing: -0.025em; line-height: 1.15; }
+        .label { font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; font-weight: 600; }
+
+        .nav-wrap {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+            background: rgba(249,249,251,0.92); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid rgba(207,194,215,0.15); transition: border-color 0.2s ease;
+        }
+        .nav-link { font-size: 14px; font-weight: 500; color: #1a1c1d; text-decoration: none; opacity: 0.6; transition: opacity 0.15s ease; }
+        .nav-link:hover { opacity: 1; }
+
+        .prose { max-width: 680px; margin: 0 auto; }
+        .prose h2 { font-family: 'Manrope', sans-serif; font-weight: 700; font-size: 1.5rem; letter-spacing: -0.02em; line-height: 1.25; color: #1a1c1d; margin: 2.5rem 0 0.875rem; }
+        .prose p { font-size: 1.0625rem; line-height: 1.8; color: rgba(26,28,29,0.76); margin: 0 0 1.25rem; }
+        .prose ul { margin: 0.5rem 0 1.25rem 1.25rem; }
+        .prose li { font-size: 1.0625rem; line-height: 1.75; color: rgba(26,28,29,0.76); margin-bottom: 0.5rem; }
+        .prose strong { color: #1a1c1d; font-weight: 600; }
+
+        .pull-quote {
+            border-left: 4px solid #93075d; padding: 1.25rem 1.5rem; background: rgba(147,7,93,0.04);
+            border-radius: 0 10px 10px 0; margin: 2rem 0;
+        }
+        .pull-quote p { font-family: 'Manrope', sans-serif; font-weight: 600; font-size: 1.0625rem; line-height: 1.55; color: #1a1c1d; margin: 0; letter-spacing: -0.01em; }
+
+        .callout {
+            background: rgba(110,0,193,0.05); border-radius: 12px; padding: 1.25rem 1.5rem; margin: 2rem 0;
+        }
+        .callout-title { font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; font-weight: 700; color: #6e00c1; margin-bottom: 0.5rem; }
+        .callout p { font-size: 0.9375rem; line-height: 1.65; color: rgba(26,28,29,0.7); margin: 0; }
+
+        .extraction-demo {
+            background: #fff; border-radius: 14px; overflow: hidden;
+            box-shadow: 0 16px 40px rgba(110,0,193,0.09), 0 3px 8px rgba(110,0,193,0.04);
+            margin: 2rem 0;
+        }
+        .demo-bar { background: #f3f3f5; height: 38px; display: flex; align-items: center; padding: 0 14px; gap: 6px; border-bottom: 1px solid rgba(207,194,215,0.18); }
+        .dot { width: 10px; height: 10px; border-radius: 50%; }
+        .demo-body { padding: 1.5rem; }
+        .contract-text { background: #f9f9fb; border-radius: 8px; padding: 1rem 1.25rem; font-size: 0.875rem; line-height: 1.7; color: rgba(26,28,29,0.55); font-family: 'Menlo', monospace; margin-bottom: 1.25rem; }
+        .highlight { background: rgba(110,0,193,0.1); color: #6e00c1; border-radius: 3px; padding: 1px 4px; font-weight: 600; }
+        .extracted-row { display: flex; align-items: center; justify-content: space-between; padding: 0.625rem 0; border-bottom: 1px solid rgba(207,194,215,0.15); }
+        .extracted-row:last-child { border-bottom: none; }
+        .extracted-key { font-size: 12px; font-weight: 600; letter-spacing: 0.02em; color: rgba(26,28,29,0.45); text-transform: uppercase; }
+        .extracted-val { font-size: 14px; font-weight: 600; color: #1a1c1d; }
+
+        .chip-ai { background: rgba(26,28,29,0.06); color: rgba(26,28,29,0.62); border-radius: 20px; padding: 3px 10px; font-size: 10.5px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; display: inline-block; }
+
+        .cta-bg {
+            background: linear-gradient(145deg, #6e00c1 0%, #7d11d4 40%, #8a2be2 70%, #93075d 100%);
+            position: relative; overflow: hidden; border-radius: 20px;
+        }
+        .cta-bg::before { content: ''; position: absolute; top: -40%; left: -15%; width: 55%; height: 200%; background: radial-gradient(ellipse, rgba(255,255,255,0.07) 0%, transparent 65%); pointer-events: none; }
+
+        .related-card {
+            background: #fff; border-radius: 14px; padding: 1.5rem;
+            box-shadow: 0 8px 20px rgba(110,0,193,0.05); text-decoration: none; color: inherit;
+            transition: transform 0.2s ease, box-shadow 0.2s ease; display: block;
+        }
+        .related-card:hover { transform: translateY(-2px); box-shadow: 0 16px 36px rgba(110,0,193,0.09); }
+
+        ::-webkit-scrollbar { width: 5px; } ::-webkit-scrollbar-track { background: #f3f3f5; } ::-webkit-scrollbar-thumb { background: #cfc2d7; border-radius: 3px; }
+
+        @media (max-width: 900px) {
+            .nav-links { display: none !important; }
+            .related-grid { grid-template-columns: 1fr !important; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ══ NAV ══ -->
+<header class="nav-wrap" id="nav">
+    <nav style="max-width:1200px;margin:0 auto;padding:0 2rem;height:64px;display:flex;align-items:center;justify-content:space-between;">
+        <a href="../../../" class="logo-mark">nissa</a>
+        <div class="nav-links" style="display:flex;align-items:center;gap:2rem;">
+            <a href="../../../#how-it-works" class="nav-link">How it works</a>
+            <a href="../../../#capabilities" class="nav-link">Features</a>
+            <a href="../../../#pricing" class="nav-link">Pricing</a>
+            <a href="../../" class="nav-link">Blog</a>
+        </div>
+        <a href="../../../#demo" class="btn-primary" style="font-size:14px;padding:9px 20px;">
+            Book a demo
+            <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M1 6.5h11M7 1.5l5 5-5 5" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+    </nav>
+</header>
+
+
+<!-- ══ ARTICLE HEADER ══ -->
+<section style="padding-top:96px;background:#f9f9fb;">
+    <div style="max-width:800px;margin:0 auto;padding:3.5rem 2rem 0;">
+        <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:2rem;">
+            <a href="../../" style="font-size:13px;color:rgba(26,28,29,0.42);text-decoration:none;" onmouseover="this.style.color='#6e00c1'" onmouseout="this.style.color='rgba(26,28,29,0.42)'">Blog</a>
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M4 2l4 4-4 4" stroke="rgba(26,28,29,0.3)" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <a href="../../category/ai-automation/" style="font-size:13px;color:rgba(26,28,29,0.42);text-decoration:none;" onmouseover="this.style.color='rgba(26,28,29,0.65)'" onmouseout="this.style.color='rgba(26,28,29,0.42)'">AI &amp; Automation</a>
+        </div>
+
+        <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:1.5rem;">
+            <span class="chip-ai">AI &amp; Automation</span>
+            <span style="font-size:13px;color:rgba(26,28,29,0.4);">5 min read</span>
+        </div>
+
+        <h1 class="headline" style="font-size:clamp(2rem,4vw,2.875rem);margin-bottom:1.25rem;color:#1a1c1d;">
+            How AI actually reads a contract (and why it matters for procurement)
+        </h1>
+
+        <p style="font-size:1.125rem;line-height:1.7;color:rgba(26,28,29,0.58);margin-bottom:2rem;max-width:600px;">
+            AI doesn't read contracts the way a lawyer does. For procurement teams, that difference turns out to be a feature — not a bug.
+        </p>
+
+        <div style="display:flex;align-items:center;gap:0.75rem;padding-bottom:2.5rem;border-bottom:1px solid rgba(207,194,215,0.2);">
+            <div style="width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,#6e00c1,#8a2be2);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                <span style="font-family:'Manrope',sans-serif;font-weight:800;font-size:14px;color:white;">P</span>
+            </div>
+            <div>
+                <div style="font-size:14px;font-weight:600;color:#1a1c1d;">Pat Doyle</div>
+                <div style="font-size:12.5px;color:rgba(26,28,29,0.42);">Founder, Nissa · February 18, 2026</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!-- ══ ARTICLE BODY ══ -->
+<article style="padding:3rem 2rem 5rem;">
+    <div class="prose">
+
+        <p>The most common question we hear from finance and procurement leaders considering AI contract tools: "How accurate is it, really?"</p>
+
+        <p>It's the right question. But to answer it well, it helps to understand what AI extraction actually does — and what it doesn't do — because the comparison point most people have in mind (a lawyer reading the contract) isn't quite right.</p>
+
+        <h2>What a lawyer does vs. what AI does</h2>
+
+        <p>When a lawyer reads a contract, they're doing several distinct things simultaneously:</p>
+
+        <ul>
+            <li><strong>Parsing language</strong> — understanding what the words mean in context</li>
+            <li><strong>Interpreting intent</strong> — inferring what the parties meant beyond what they wrote</li>
+            <li><strong>Identifying risk</strong> — flagging clauses that create legal exposure</li>
+            <li><strong>Making judgment calls</strong> — recommending how to handle ambiguous situations</li>
+        </ul>
+
+        <p>AI contract extraction does the first of these reliably. It's getting better at the second and third. It doesn't do the fourth — and for most procurement use cases, you don't need it to.</p>
+
+        <p>For procurement, the questions that matter are almost always factual: What is the price? When does it renew? What's the notice period? What are the SLA commitments? These are extraction problems, not judgment problems. And extraction is where AI genuinely outperforms humans.</p>
+
+        <div class="pull-quote">
+            <p>"AI doesn't get tired on page 47. It doesn't miss the auto-renewal clause buried in Section 12.3(b) because it was reviewing contracts until 10pm on a Thursday. It reads every document with the same attention."</p>
+        </div>
+
+        <h2>What the extraction actually looks like</h2>
+
+        <p>Here's a simplified illustration of what happens when an AI system processes a vendor contract:</p>
+
+        <div class="extraction-demo">
+            <div class="demo-bar">
+                <div class="dot" style="background:#ef4444;"></div>
+                <div class="dot" style="background:#f59e0b;"></div>
+                <div class="dot" style="background:#22c55e;"></div>
+                <span style="font-size:12px;color:rgba(26,28,29,0.4);margin-left:6px;font-family:'Menlo',monospace;">MSA_CloudVendor_2026.pdf</span>
+            </div>
+            <div class="demo-body">
+                <div style="font-size:11px;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;color:rgba(26,28,29,0.4);margin-bottom:0.75rem;">Contract excerpt</div>
+                <div class="contract-text">...This Agreement shall commence on January 1, 2026 and continue for a term of <span class="highlight">twelve (12) months</span>. Unless either party provides written notice of non-renewal no less than <span class="highlight">sixty (60) days</span> prior to the expiration date, this Agreement shall <span class="highlight">automatically renew</span> for successive one-year terms at a rate not to exceed the then-current fee plus <span class="highlight">four percent (4%)</span>...</div>
+                <div style="font-size:11px;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;color:rgba(26,28,29,0.4);margin-bottom:0.75rem;">Extracted terms</div>
+                <div class="extracted-row">
+                    <span class="extracted-key">Contract term</span>
+                    <span class="extracted-val">12 months (Jan 1 – Dec 31, 2026)</span>
+                </div>
+                <div class="extracted-row">
+                    <span class="extracted-key">Auto-renewal</span>
+                    <span class="extracted-val" style="color:#93075d;">Yes — annual</span>
+                </div>
+                <div class="extracted-row">
+                    <span class="extracted-key">Notice to cancel</span>
+                    <span class="extracted-val" style="color:#93075d;">60 days (by Nov 2, 2026)</span>
+                </div>
+                <div class="extracted-row">
+                    <span class="extracted-key">Price escalation cap</span>
+                    <span class="extracted-val">4% per renewal year</span>
+                </div>
+            </div>
+        </div>
+
+        <p>The AI didn't interpret the clause. It read it, identified the relevant data points, normalized them into structured fields, and calculated the actionable date from the extracted terms. That's the core of what procurement needs — and it happens in seconds instead of 45 minutes of manual review.</p>
+
+        <h2>Where accuracy matters most</h2>
+
+        <p>Accuracy isn't uniform across all contract types. Extraction works best when:</p>
+
+        <ul>
+            <li>The terms are in standard language (most commercial SaaS contracts, service agreements, NDAs)</li>
+            <li>The document is well-structured with numbered sections</li>
+            <li>Key terms are explicitly stated rather than implied by reference to external documents</li>
+        </ul>
+
+        <p>Extraction is harder — though still viable — on:</p>
+
+        <ul>
+            <li>Highly negotiated agreements with unusual clause structures</li>
+            <li>Documents with heavy redlines or tracked changes</li>
+            <li>Scanned PDFs with poor OCR quality</li>
+            <li>Contracts that rely heavily on incorporated exhibits without explicit values</li>
+        </ul>
+
+        <div class="callout">
+            <div class="callout-title">The 94% figure (and what it means)</div>
+            <p>In structured benchmarks on commercial vendor contracts, modern LLM-based extraction achieves 92–96% accuracy on key fields like dates, pricing, and renewal terms. For comparison, manual human review achieves roughly 85–91% accuracy on the same tasks — humans make errors too, especially on long documents. AI doesn't replace judgment on complex clauses. It removes the human error risk on the straightforward ones.</p>
+        </div>
+
+        <h2>The right mental model: a procurement analyst, not a lawyer</h2>
+
+        <p>The procurement use case for AI isn't legal review. It's information retrieval and monitoring at scale.</p>
+
+        <p>Think of it as having a procurement analyst who reads every contract the moment it arrives, extracts the key commercial terms, adds renewal dates to the calendar, flags unusual clauses for human review, and maintains a running database of what you've agreed to with every vendor. They never miss a deadline and never forget a clause.</p>
+
+        <p>That's not a replacement for legal judgment on complex agreements. It's a system that makes sure the straightforward operational questions — When does this renew? What does it cost? What are the SLAs? — are always answered without requiring anyone to manually read the contract.</p>
+
+        <div class="pull-quote">
+            <p>"Nissa surfaces terms and benchmarks. It doesn't make legal decisions. Think of it as giving your team instant access to what's in the contract so they can make better decisions faster. Procurement stays in control."</p>
+        </div>
+
+        <h2>What this means for procurement teams</h2>
+
+        <p>The practical implication is that AI contract extraction is most valuable as a layer that handles the operational intelligence side of contracts automatically, freeing procurement and finance attention for the high-judgment work: negotiation strategy, vendor relationships, and complex contract exceptions.</p>
+
+        <p>Every hour a procurement lead spends manually reading a renewal contract to find the notice date is an hour not spent on the negotiation strategy for that renewal. The math is straightforward. The tool that reads the contract for you doesn't need to be perfect — it needs to be reliably right on the facts that matter operationally, and transparent about what it's uncertain about.</p>
+
+        <div class="callout">
+            <div class="callout-title">How Nissa approaches accuracy</div>
+            <p>Nissa surfaces extracted terms with the source text highlighted, so you can verify anything that matters. It flags low-confidence extractions rather than presenting them as certain. And it never makes legal recommendations — it gives your team the information to make better decisions, faster.</p>
+        </div>
+
+    </div>
+</article>
+
+
+<!-- ══ INLINE CTA ══ -->
+<section style="padding:0 2rem 5rem;">
+    <div style="max-width:680px;margin:0 auto;">
+        <div class="cta-bg" style="padding:3rem;text-align:center;">
+            <div style="position:relative;z-index:1;">
+                <div class="label" style="color:rgba(255,255,255,0.45);display:block;margin-bottom:0.875rem;">See it on your contracts</div>
+                <h2 class="headline" style="font-size:1.75rem;color:white;margin-bottom:0.875rem;">AI extraction in 60 seconds.</h2>
+                <p style="font-size:0.9375rem;line-height:1.65;color:rgba(255,255,255,0.6);margin-bottom:1.75rem;">Forward a contract. Get key terms, renewal dates, and risk flags instantly — in plain English.</p>
+                <a href="../../../#demo" style="background:white;color:#6e00c1;border-radius:6px;padding:13px 28px;font-family:'Inter',sans-serif;font-weight:700;font-size:14px;text-decoration:none;display:inline-flex;align-items:center;gap:8px;">Book a demo →</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!-- ══ RELATED POSTS ══ -->
+<section style="padding:0 2rem 5rem;max-width:800px;margin:0 auto;">
+    <div style="border-top:1px solid rgba(207,194,215,0.2);padding-top:3rem;">
+        <div class="label" style="color:rgba(26,28,29,0.35);margin-bottom:1.5rem;">More from the blog</div>
+        <div class="related-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+            <a href="../why-clm-adoption-fails/" class="related-card">
+                <span style="background:#ffd8e6;color:#93075d;border-radius:20px;padding:2px 8px;font-size:10px;font-weight:700;letter-spacing:0.04em;text-transform:uppercase;display:inline-block;margin-bottom:0.75rem;">Contract Intelligence</span>
+                <div class="headline" style="font-size:1rem;margin-bottom:0.5rem;color:#1a1c1d;line-height:1.35;">Why 70% of CLM implementations fail</div>
+                <div style="font-size:12px;color:rgba(26,28,29,0.4);">Mar 5, 2026 · 6 min</div>
+            </a>
+            <a href="../missed-auto-renewals-cost-more-than-you-think/" class="related-card">
+                <span style="background:rgba(110,0,193,0.08);color:#6e00c1;border-radius:20px;padding:2px 8px;font-size:10px;font-weight:700;letter-spacing:0.04em;text-transform:uppercase;display:inline-block;margin-bottom:0.75rem;">Procurement</span>
+                <div class="headline" style="font-size:1rem;margin-bottom:0.5rem;color:#1a1c1d;line-height:1.35;">The hidden cost of missed auto-renewals</div>
+                <div style="font-size:12px;color:rgba(26,28,29,0.4);">Mar 12, 2026 · 5 min</div>
+            </a>
+        </div>
+    </div>
+</section>
+
+
+<!-- ══ FOOTER ══ -->
+<footer style="background:#1a1c1d;padding:4rem 2rem 2.5rem;">
+    <div style="max-width:1200px;margin:0 auto;">
+        <div style="display:grid;grid-template-columns:2.25fr 1fr 1fr 1fr;gap:4rem;margin-bottom:3rem;">
+            <div>
+                <div style="font-family:'Manrope',sans-serif;font-weight:800;font-size:1.375rem;letter-spacing:-0.05em;color:white;margin-bottom:1.125rem;">nissa</div>
+                <p style="font-size:0.875rem;line-height:1.72;color:rgba(255,255,255,0.35);max-width:255px;margin:0 0 1rem;">Most CLMs store contracts. Nissa runs them.</p>
+                <a href="mailto:hello@nissa.ai" style="font-size:13.5px;color:#8a2be2;text-decoration:none;font-weight:500;">hello@nissa.ai</a>
+            </div>
+            <div>
+                <div class="label" style="color:rgba(255,255,255,0.25);display:block;margin-bottom:1.25rem;">Product</div>
+                <div style="display:flex;flex-direction:column;gap:0.75rem;">
+                    <a href="../../../#how-it-works" style="font-size:14px;color:rgba(255,255,255,0.48);text-decoration:none;" onmouseover="this.style.color='rgba(255,255,255,0.82)'" onmouseout="this.style.color='rgba(255,255,255,0.48)'">How it works</a>
+                    <a href="../../../#pricing" style="font-size:14px;color:rgba(255,255,255,0.48);text-decoration:none;" onmouseover="this.style.color='rgba(255,255,255,0.82)'" onmouseout="this.style.color='rgba(255,255,255,0.48)'">Pricing</a>
+                </div>
+            </div>
+            <div>
+                <div class="label" style="color:rgba(255,255,255,0.25);display:block;margin-bottom:1.25rem;">Company</div>
+                <div style="display:flex;flex-direction:column;gap:0.75rem;">
+                    <a href="../../" style="font-size:14px;color:rgba(255,255,255,0.82);text-decoration:none;">Blog</a>
+                    <a href="mailto:hello@nissa.ai" style="font-size:14px;color:rgba(255,255,255,0.48);text-decoration:none;" onmouseover="this.style.color='rgba(255,255,255,0.82)'" onmouseout="this.style.color='rgba(255,255,255,0.48)'">Contact</a>
+                </div>
+            </div>
+            <div>
+                <div class="label" style="color:rgba(255,255,255,0.25);display:block;margin-bottom:1.25rem;">Legal</div>
+                <div style="display:flex;flex-direction:column;gap:0.75rem;">
+                    <a href="#" style="font-size:14px;color:rgba(255,255,255,0.48);text-decoration:none;" onmouseover="this.style.color='rgba(255,255,255,0.82)'" onmouseout="this.style.color='rgba(255,255,255,0.48)'">Privacy</a>
+                    <a href="#" style="font-size:14px;color:rgba(255,255,255,0.48);text-decoration:none;" onmouseover="this.style.color='rgba(255,255,255,0.82)'" onmouseout="this.style.color='rgba(255,255,255,0.48)'">Terms</a>
+                </div>
+            </div>
+        </div>
+        <div style="border-top:1px solid rgba(255,255,255,0.07);padding-top:2rem;">
+            <div style="font-size:13px;color:rgba(255,255,255,0.2);">© 2026 Nissa Technologies, Inc.</div>
+        </div>
+    </div>
+</footer>
+
+<script>
+    const nav = document.getElementById('nav');
+    window.addEventListener('scroll', () => {
+        nav.style.borderBottomColor = window.scrollY > 10 ? 'rgba(207,194,215,0.28)' : 'rgba(207,194,215,0.15)';
+    }, { passive: true });
+</script>
+</body>
+</html>
