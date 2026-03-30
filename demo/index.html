@@ -382,27 +382,45 @@
         nav.style.borderBottomColor = window.scrollY > 10 ? 'rgba(207,194,215,0.28)' : 'rgba(207,194,215,0.15)';
     }, { passive: true });
 
-    // Form submission (placeholder — replace with real endpoint)
+    // Form submission → Formspree
     function handleSubmit(e) {
         e.preventDefault();
 
         const form = document.getElementById('demoForm');
+        const btn = form.querySelector('.btn-submit');
         const data = new FormData(form);
 
-        // Log form data (replace with actual API call)
-        const payload = {};
-        data.forEach((value, key) => { payload[key] = value; });
-        console.log('Demo request submitted:', payload);
+        // Disable button while submitting
+        btn.disabled = true;
+        btn.innerHTML = 'Submitting...';
+        btn.style.opacity = '0.7';
 
-        // Show success state
-        const container = document.getElementById('formContainer');
-        const success = document.getElementById('successState');
-        container.style.opacity = '0';
-        container.style.transform = 'translateY(-8px)';
-        setTimeout(() => {
-            container.style.display = 'none';
-            success.classList.add('show');
-        }, 250);
+        fetch('https://formspree.io/f/mlgoggke', {
+            method: 'POST',
+            body: data,
+            headers: { 'Accept': 'application/json' }
+        })
+        .then(response => {
+            if (response.ok) {
+                // Show success state
+                const container = document.getElementById('formContainer');
+                const success = document.getElementById('successState');
+                container.style.opacity = '0';
+                container.style.transform = 'translateY(-8px)';
+                setTimeout(() => {
+                    container.style.display = 'none';
+                    success.classList.add('show');
+                }, 250);
+            } else {
+                throw new Error('Form submission failed');
+            }
+        })
+        .catch(() => {
+            btn.disabled = false;
+            btn.innerHTML = 'Request demo <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M1 7h12M8 2l5 5-5 5" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+            btn.style.opacity = '1';
+            alert('Something went wrong. Please try again or email us at hello@nissa.ai');
+        });
     }
 </script>
 </body>
