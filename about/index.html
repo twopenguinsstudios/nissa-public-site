@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+    <title>About — Nissa</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body { background: #f9f9fb; color: #1a1c1d; font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; margin: 0; }
+
+        .btn-primary {
+            background: linear-gradient(45deg, #6e00c1, #8a2be2); color: white; border-radius: 6px; padding: 13px 28px;
+            font-family: 'Inter', sans-serif; font-weight: 600; font-size: 15px; letter-spacing: -0.01em;
+            transition: transform 0.25s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.25s ease;
+            display: inline-flex; align-items: center; gap: 8px; cursor: pointer; border: none; text-decoration: none;
+        }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 28px rgba(110,0,193,0.32); }
+        .btn-primary:active { transform: translateY(0); }
+        .btn-primary:focus-visible { outline: 2px solid #6e00c1; outline-offset: 3px; }
+
+        .logo-mark {
+            font-family: 'Manrope', sans-serif; font-weight: 800; font-size: 1.375rem; letter-spacing: -0.05em;
+            background: linear-gradient(45deg, #6e00c1, #8a2be2); -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent; background-clip: text; text-decoration: none;
+        }
+        .display { font-family: 'Manrope', sans-serif; font-weight: 800; letter-spacing: -0.035em; line-height: 1.04; }
+        .headline { font-family: 'Manrope', sans-serif; font-weight: 700; letter-spacing: -0.025em; line-height: 1.15; }
+        .label { font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; font-weight: 600; }
+        .gradient-text {
+            background: linear-gradient(45deg, #6e00c1, #8a2be2); -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent; background-clip: text;
+        }
+
+        .nav-wrap {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+            background: rgba(249,249,251,0.92); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid rgba(207,194,215,0.15); transition: border-color 0.2s ease;
+        }
+        .nav-link { font-size: 14px; font-weight: 500; color: #1a1c1d; text-decoration: none; opacity: 0.6; transition: opacity 0.15s ease; }
+        .nav-link:hover { opacity: 1; }
+
+        .value-card {
+            background: #fff; border-radius: 16px; padding: 2rem;
+            box-shadow: 0 12px 28px rgba(110,0,193,0.06), 0 2px 6px rgba(110,0,193,0.03);
+        }
+        .value-icon {
+            width: 44px; height: 44px; border-radius: 12px;
+            background: rgba(110,0,193,0.06); display: flex; align-items: center; justify-content: center;
+            margin-bottom: 1.25rem;
+        }
+
+        .cta-bg {
+            background: linear-gradient(145deg, #6e00c1 0%, #7d11d4 40%, #8a2be2 70%, #93075d 100%);
+            position: relative; overflow: hidden;
+        }
+        .cta-bg::before { content: ''; position: absolute; top: -40%; left: -15%; width: 55%; height: 200%; background: radial-gradient(ellipse, rgba(255,255,255,0.07) 0%, transparent 65%); pointer-events: none; }
+        .cta-bg::after { content: ''; position: absolute; bottom: -30%; right: -5%; width: 45%; height: 160%; background: radial-gradient(ellipse, rgba(147,7,93,0.35) 0%, transparent 65%); pointer-events: none; }
+
+        .fade-up { opacity: 0; transform: translateY(20px); transition: opacity 0.55s ease, transform 0.55s cubic-bezier(0.16,1,0.3,1); }
+        .fade-up.visible { opacity: 1; transform: translateY(0); }
+        .d1 { transition-delay: 0.1s; } .d2 { transition-delay: 0.2s; } .d3 { transition-delay: 0.3s; }
+
+        ::-webkit-scrollbar { width: 5px; } ::-webkit-scrollbar-track { background: #f3f3f5; } ::-webkit-scrollbar-thumb { background: #cfc2d7; border-radius: 3px; }
+
+        @media (max-width: 900px) {
+            .nav-links { display: none !important; }
+            .about-grid { grid-template-columns: 1fr !important; }
+            .values-grid { grid-template-columns: 1fr !important; }
+            .footer-grid { grid-template-columns: 1fr 1fr !important; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ══ NAV ══ -->
+<header class="nav-wrap" id="nav">
+    <nav style="max-width:1200px;margin:0 auto;padding:0 2rem;height:64px;display:flex;align-items:center;justify-content:space-between;">
+        <a href="../" class="logo-mark">nissa</a>
+        <div class="nav-links" style="display:flex;align-items:center;gap:2rem;">
+            <a href="/#how-it-works" class="nav-link">How it works</a>
+            <a href="/#capabilities" class="nav-link">Features</a>
+            <a href="/#pricing" class="nav-link">Pricing</a>
+            <a href="../blog/" class="nav-link">Blog</a>
+        </div>
+        <a href="../demo/" class="btn-primary" style="font-size:14px;padding:9px 20px;">
+            Book a demo
+            <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M1 6.5h11M7 1.5l5 5-5 5" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+    </nav>
+</header>
+
+
+<!-- ══ HERO ══ -->
+<section style="padding-top:96px;background:#f9f9fb;">
+    <div style="max-width:1200px;margin:0 auto;padding:4.5rem 2rem 0;">
+        <div class="about-grid" style="display:grid;grid-template-columns:1.1fr 1fr;gap:5rem;align-items:center;">
+
+            <!-- Left -->
+            <div>
+                <span class="label fade-up" style="color:#6e00c1;opacity:0.7;display:block;margin-bottom:1rem;">About Nissa</span>
+
+                <h1 class="display fade-up d1" style="font-size:clamp(2.25rem,4vw,3.25rem);margin-bottom:1.5rem;">
+                    AI enthusiasts.<br>Entrepreneurs.<br><span class="gradient-text">Procurement nerds.</span>
+                </h1>
+
+                <p class="fade-up d2" style="font-size:1.0625rem;line-height:1.8;color:rgba(26,28,29,0.6);max-width:460px;margin-bottom:1.25rem;">
+                    We started Nissa because we lived the problem. Years of watching mid-market finance teams drown in spreadsheets, miss renewal windows, and overpay vendors — while enterprise CLMs sat unused. There had to be a better way.
+                </p>
+
+                <p class="fade-up d2" style="font-size:1.0625rem;line-height:1.8;color:rgba(26,28,29,0.6);max-width:460px;margin-bottom:2rem;">
+                    We were early to AI — not as a buzzword, but as a tool that could finally make contract intelligence accessible to the companies that need it most. No portals. No migration projects. Just forward a contract and get answers.
+                </p>
+
+                <div class="fade-up d3" style="display:flex;align-items:center;gap:0.75rem;">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6e00c1" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                    <span style="font-size:0.9375rem;color:rgba(26,28,29,0.5);">Orlando, Florida</span>
+                </div>
+            </div>
+
+            <!-- Right: Location card -->
+            <div class="fade-up d2" style="position:relative;">
+                <div style="background:#fff;border-radius:20px;overflow:hidden;box-shadow:0 20px 56px rgba(110,0,193,0.09),0 4px 12px rgba(110,0,193,0.04);">
+                    <!-- Map-like gradient -->
+                    <div style="height:240px;background:linear-gradient(155deg,#2d0060 0%,#4a0090 30%,#6e00c1 55%,#8a2be2 80%,#93075d 100%);position:relative;overflow:hidden;">
+                        <div style="position:absolute;inset:0;background:radial-gradient(ellipse at 40% 60%,rgba(255,255,255,0.08) 0%,transparent 60%);"></div>
+                        <!-- Grid pattern overlay -->
+                        <div style="position:absolute;inset:0;opacity:0.06;background-image:linear-gradient(rgba(255,255,255,0.5) 1px, transparent 1px),linear-gradient(90deg, rgba(255,255,255,0.5) 1px, transparent 1px);background-size:40px 40px;"></div>
+                        <!-- Pin -->
+                        <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-70%);">
+                            <div style="width:48px;height:48px;border-radius:50%;background:rgba(255,255,255,0.15);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;box-shadow:0 0 0 8px rgba(255,255,255,0.06);">
+                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="padding:1.75rem;">
+                        <div style="font-family:'Manrope',sans-serif;font-weight:700;font-size:1.125rem;letter-spacing:-0.02em;color:#1a1c1d;margin-bottom:0.375rem;">Orlando, FL</div>
+                        <p style="font-size:0.875rem;line-height:1.65;color:rgba(26,28,29,0.5);margin:0;">Built in the sunshine. Serving mid-market finance and procurement teams everywhere.</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+
+<!-- ══ STORY ══ -->
+<section style="padding:5rem 2rem;">
+    <div style="max-width:680px;margin:0 auto;">
+
+        <span class="label fade-up" style="color:rgba(26,28,29,0.35);display:block;margin-bottom:1.25rem;">Our story</span>
+
+        <h2 class="headline fade-up" style="font-size:1.75rem;margin-bottom:1.5rem;color:#1a1c1d;">We built the tool we wished we had.</h2>
+
+        <p class="fade-up" style="font-size:1.0625rem;line-height:1.8;color:rgba(26,28,29,0.65);margin-bottom:1.25rem;">
+            Before Nissa, we spent years in procurement and finance operations at mid-market companies. We saw the same pattern everywhere: contracts get signed, then disappear. They live in email inboxes, shared drives, and the memory of the person who signed them.
+        </p>
+
+        <p class="fade-up" style="font-size:1.0625rem;line-height:1.8;color:rgba(26,28,29,0.65);margin-bottom:1.25rem;">
+            Renewals get missed. Pricing never gets benchmarked. Nobody knows what's in the contracts until something goes wrong. We tried the big CLM platforms — they were built for Fortune 500 legal teams, not a VP of Finance at a 300-person company trying to keep track of 200 vendor contracts.
+        </p>
+
+        <p class="fade-up" style="font-size:1.0625rem;line-height:1.8;color:rgba(26,28,29,0.65);margin-bottom:1.25rem;">
+            When large language models became capable enough to reliably extract contract terms, we knew the moment had arrived. The technology could finally meet the problem where it lives — in the inbox, in Slack, in the tools teams already use every day.
+        </p>
+
+        <div class="fade-up" style="border-left:4px solid #93075d;padding:1.25rem 1.5rem;background:rgba(147,7,93,0.04);border-radius:0 10px 10px 0;margin:2rem 0;">
+            <p style="font-family:'Manrope',sans-serif;font-weight:600;font-size:1.0625rem;line-height:1.55;color:#1a1c1d;margin:0;letter-spacing:-0.01em;">
+                "Most CLMs store contracts. We built Nissa to run them — to turn static documents into operational intelligence that works where your team already works."
+            </p>
+        </div>
+
+        <p class="fade-up" style="font-size:1.0625rem;line-height:1.8;color:rgba(26,28,29,0.65);">
+            That's Nissa. Forward a contract. Get answers. No portal. No migration. No adoption problem.
+        </p>
+
+    </div>
+</section>
+
+
+<!-- ══ VALUES ══ -->
+<section style="padding:0 2rem 5rem;">
+    <div style="max-width:1200px;margin:0 auto;">
+
+        <div style="text-align:center;margin-bottom:3rem;">
+            <span class="label fade-up" style="color:rgba(26,28,29,0.35);display:block;margin-bottom:1rem;">What we believe</span>
+            <h2 class="headline fade-up" style="font-size:1.75rem;color:#1a1c1d;">Principles we build on.</h2>
+        </div>
+
+        <div class="values-grid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:1.25rem;">
+
+            <div class="value-card fade-up">
+                <div class="value-icon">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#6e00c1" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                </div>
+                <div style="font-family:'Manrope',sans-serif;font-weight:700;font-size:1.0625rem;letter-spacing:-0.015em;color:#1a1c1d;margin-bottom:0.5rem;">Zero-friction or bust</div>
+                <p style="font-size:0.875rem;line-height:1.65;color:rgba(26,28,29,0.55);margin:0;">If it requires training, migration, or a new portal, most teams won't use it. We obsess over making Nissa work where people already work.</p>
+            </div>
+
+            <div class="value-card fade-up d1">
+                <div class="value-icon">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#6e00c1" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                </div>
+                <div style="font-family:'Manrope',sans-serif;font-weight:700;font-size:1.0625rem;letter-spacing:-0.015em;color:#1a1c1d;margin-bottom:0.5rem;">Honest AI</div>
+                <p style="font-size:0.875rem;line-height:1.65;color:rgba(26,28,29,0.55);margin:0;">AI should show its work. We surface confidence levels, link to source text, and never present uncertain extractions as facts. Your team stays in control.</p>
+            </div>
+
+            <div class="value-card fade-up d2">
+                <div class="value-icon">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#6e00c1" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                </div>
+                <div style="font-family:'Manrope',sans-serif;font-weight:700;font-size:1.0625rem;letter-spacing:-0.015em;color:#1a1c1d;margin-bottom:0.5rem;">Your data is yours</div>
+                <p style="font-size:0.875rem;line-height:1.65;color:rgba(26,28,29,0.55);margin:0;">We never train on your contracts. We never share them. We encrypt everything. When you leave, we delete everything. No exceptions.</p>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+
+<!-- ══ CTA ══ -->
+<section class="cta-bg" style="padding:5rem 2rem;">
+    <div style="max-width:680px;margin:0 auto;text-align:center;position:relative;z-index:1;">
+        <span class="label" style="color:rgba(255,255,255,0.45);display:block;margin-bottom:1rem;">Get to know us</span>
+        <h2 class="headline" style="font-size:2.25rem;color:white;margin-bottom:1rem;">See Nissa on your own contracts.</h2>
+        <p style="font-size:1rem;line-height:1.7;color:rgba(255,255,255,0.6);margin-bottom:2rem;">30 minutes. 10 of your real contracts. We'll show you exactly what Nissa finds.</p>
+        <a href="../demo/" style="background:white;color:#6e00c1;border-radius:6px;padding:14px 32px;font-family:'Inter',sans-serif;font-weight:700;font-size:15px;letter-spacing:-0.01em;text-decoration:none;display:inline-flex;align-items:center;gap:8px;transition:transform 0.25s cubic-bezier(0.34,1.56,0.64,1),box-shadow 0.25s ease;" onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 12px 32px rgba(0,0,0,0.2)'" onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='none'">
+            Book a demo
+            <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M1 6.5h11M7 1.5l5 5-5 5" stroke="#6e00c1" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+    </div>
+</section>
+
+
+<!-- ══ FOOTER ══ -->
+<footer style="background:#1a1c1d;padding:4rem 2rem 2.5rem;">
+    <div style="max-width:1200px;margin:0 auto;">
+        <div class="footer-grid" style="display:grid;grid-template-columns:2.25fr 1fr 1fr 1fr;gap:4rem;margin-bottom:3rem;">
+            <div>
+                <div style="font-family:'Manrope',sans-serif;font-weight:800;font-size:1.375rem;letter-spacing:-0.05em;color:white;margin-bottom:1.125rem;">nissa</div>
+                <p style="font-size:0.875rem;line-height:1.72;color:rgba(255,255,255,0.35);max-width:255px;margin:0 0 1rem;">Most CLMs store contracts. Nissa runs them.</p>
+                <a href="mailto:hello@nissa.ai" style="font-size:13.5px;color:#8a2be2;text-decoration:none;font-weight:500;">hello@nissa.ai</a>
+            </div>
+            <div>
+                <div class="label" style="color:rgba(255,255,255,0.25);display:block;margin-bottom:1.25rem;">Product</div>
+                <div style="display:flex;flex-direction:column;gap:0.75rem;">
+                    <a href="/#how-it-works" style="font-size:14px;color:rgba(255,255,255,0.48);text-decoration:none;" onmouseover="this.style.color='rgba(255,255,255,0.82)'" onmouseout="this.style.color='rgba(255,255,255,0.48)'">How it works</a>
+                    <a href="/#capabilities" style="font-size:14px;color:rgba(255,255,255,0.48);text-decoration:none;" onmouseover="this.style.color='rgba(255,255,255,0.82)'" onmouseout="this.style.color='rgba(255,255,255,0.48)'">Features</a>
+                    <a href="/#pricing" style="font-size:14px;color:rgba(255,255,255,0.48);text-decoration:none;" onmouseover="this.style.color='rgba(255,255,255,0.82)'" onmouseout="this.style.color='rgba(255,255,255,0.48)'">Pricing</a>
+                </div>
+            </div>
+            <div>
+                <div class="label" style="color:rgba(255,255,255,0.25);display:block;margin-bottom:1.25rem;">Company</div>
+                <div style="display:flex;flex-direction:column;gap:0.75rem;">
+                    <a href="../about/" style="font-size:14px;color:rgba(255,255,255,0.82);text-decoration:none;">About</a>
+                    <a href="../blog/" style="font-size:14px;color:rgba(255,255,255,0.48);text-decoration:none;" onmouseover="this.style.color='rgba(255,255,255,0.82)'" onmouseout="this.style.color='rgba(255,255,255,0.48)'">Blog</a>
+                    <a href="mailto:hello@nissa.ai" style="font-size:14px;color:rgba(255,255,255,0.48);text-decoration:none;" onmouseover="this.style.color='rgba(255,255,255,0.82)'" onmouseout="this.style.color='rgba(255,255,255,0.48)'">Contact</a>
+                </div>
+            </div>
+            <div>
+                <div class="label" style="color:rgba(255,255,255,0.25);display:block;margin-bottom:1.25rem;">Legal</div>
+                <div style="display:flex;flex-direction:column;gap:0.75rem;">
+                    <a href="../privacy/" style="font-size:14px;color:rgba(255,255,255,0.48);text-decoration:none;" onmouseover="this.style.color='rgba(255,255,255,0.82)'" onmouseout="this.style.color='rgba(255,255,255,0.48)'">Privacy</a>
+                    <a href="../terms/" style="font-size:14px;color:rgba(255,255,255,0.48);text-decoration:none;" onmouseover="this.style.color='rgba(255,255,255,0.82)'" onmouseout="this.style.color='rgba(255,255,255,0.48)'">Terms</a>
+                    <a href="../security/" style="font-size:14px;color:rgba(255,255,255,0.48);text-decoration:none;" onmouseover="this.style.color='rgba(255,255,255,0.82)'" onmouseout="this.style.color='rgba(255,255,255,0.48)'">Security</a>
+                </div>
+            </div>
+        </div>
+        <div style="border-top:1px solid rgba(255,255,255,0.07);padding-top:2rem;">
+            <div style="font-size:13px;color:rgba(255,255,255,0.2);">© 2026 Nissa Technologies, Inc.</div>
+        </div>
+    </div>
+</footer>
+
+<script>
+    const obs = new IntersectionObserver(
+        e => e.forEach(x => { if (x.isIntersecting) x.target.classList.add('visible'); }),
+        { threshold: 0.08 }
+    );
+    document.querySelectorAll('.fade-up').forEach(el => obs.observe(el));
+
+    const nav = document.getElementById('nav');
+    window.addEventListener('scroll', () => {
+        nav.style.borderBottomColor = window.scrollY > 10 ? 'rgba(207,194,215,0.28)' : 'rgba(207,194,215,0.15)';
+    }, { passive: true });
+</script>
+</body>
+</html>
