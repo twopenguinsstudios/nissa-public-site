@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#3d006e"/>
+      <stop offset="40%" stop-color="#6e00c1"/>
+      <stop offset="75%" stop-color="#8a2be2"/>
+      <stop offset="100%" stop-color="#93075d"/>
+    </linearGradient>
+    <radialGradient id="glow1" cx="25%" cy="40%" r="50%">
+      <stop offset="0%" stop-color="rgba(255,255,255,0.07)"/>
+      <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
+    </radialGradient>
+    <radialGradient id="glow2" cx="80%" cy="70%" r="45%">
+      <stop offset="0%" stop-color="rgba(147,7,93,0.3)"/>
+      <stop offset="100%" stop-color="rgba(147,7,93,0)"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <rect width="1200" height="630" fill="url(#glow1)"/>
+  <rect width="1200" height="630" fill="url(#glow2)"/>
+
+  <!-- Subtle grid -->
+  <pattern id="grid" width="60" height="60" patternUnits="userSpaceOnUse">
+    <path d="M 60 0 L 0 0 0 60" fill="none" stroke="rgba(255,255,255,0.03)" stroke-width="1"/>
+  </pattern>
+  <rect width="1200" height="630" fill="url(#grid)"/>
+
+  <!-- Logo -->
+  <text x="100" y="270" font-family="system-ui,-apple-system,Helvetica,Arial,sans-serif" font-weight="800" font-size="72" letter-spacing="-3" fill="white">nissa</text>
+
+  <!-- Tagline -->
+  <text x="100" y="340" font-family="system-ui,-apple-system,Helvetica,Arial,sans-serif" font-weight="600" font-size="32" letter-spacing="-0.5" fill="rgba(255,255,255,0.7)">Post-Signature Contract Intelligence</text>
+
+  <!-- Subline -->
+  <text x="100" y="400" font-family="system-ui,-apple-system,Helvetica,Arial,sans-serif" font-weight="400" font-size="22" fill="rgba(255,255,255,0.4)">Forward a contract. Get answers instantly.</text>
+
+  <!-- URL -->
+  <text x="100" y="540" font-family="system-ui,-apple-system,Helvetica,Arial,sans-serif" font-weight="500" font-size="18" letter-spacing="0.5" fill="rgba(255,255,255,0.25)">nissa.ai</text>
+</svg>
