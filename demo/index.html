@@ -3,6 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Google tag (gtag.js) - Google Ads -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=AW-18119216290"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'AW-18119216290');
+    </script>
+
     <link rel="icon" type="image/svg+xml" href="../favicon.svg">
     <title>Book a Demo — Nissa Contract Intelligence</title>
     <meta name="description" content="Book a 30-minute demo of Nissa. We'll run AI contract analysis on 10 of your real contracts and show you renewals at risk, pricing gaps, and obligations nobody is tracking.">
@@ -411,15 +420,7 @@
         })
         .then(response => {
             if (response.ok) {
-                // Show success state
-                const container = document.getElementById('formContainer');
-                const success = document.getElementById('successState');
-                container.style.opacity = '0';
-                container.style.transform = 'translateY(-8px)';
-                setTimeout(() => {
-                    container.style.display = 'none';
-                    success.classList.add('show');
-                }, 250);
+                window.location.href = 'thanks/';
             } else {
                 throw new Error('Form submission failed');
             }
