@@ -1,0 +1,9 @@
+# Installed agent skills (local only, not part of the site)
+.agents/
+
+# macOS
+.DS_Store
+
+# Scratch / local tooling
+temporary screenshots/
+node_modules/
